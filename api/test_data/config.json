@@ -1,0 +1,9 @@
+{
+    "chat_id": 516136047,
+    "group_chat_id": -1001310413902,
+    "photo_to_upload_url": "https://www.freecodecamp.org/news/content/images/2020/02/golang-gopher-2.jpg",
+    "audio_to_upload_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "document_to_upload_url": "http://www.africau.edu/images/default/sample.pdf",
+    "video_to_upload_url": "http://techslides.com/demos/sample-videos/small.mp4",
+    "game_short_name": "test_game"
+}
