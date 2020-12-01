@@ -8,6 +8,7 @@ import (
 	"github.com/go-microbot/viber/bot"
 )
 
+//nolint
 func main() {
 	const token = "4a469cd7c3a7d3e1-68a8c9aa88a12bd0-4a1b188c560b602a"
 
