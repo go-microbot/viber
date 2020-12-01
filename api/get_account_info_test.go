@@ -19,5 +19,6 @@ func (h getAccountInfo) Test(ctx context.Context, t *testing.T) context.Context 
 	require.NotEmpty(t, info.Name)
 	require.NotEmpty(t, info.Members)
 
-	return context.WithValue(ctx, TestDataKey(botNameCtxKey), info.Name)
+	ctx = context.WithValue(ctx, TestDataKey(botNameCtxKey), info.Name)
+	return context.WithValue(ctx, TestDataKey(chatMemberIDCtxKey), info.Members[0].ID)
 }

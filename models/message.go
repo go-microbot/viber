@@ -2,14 +2,15 @@ package models
 
 // There are available message types.
 const (
-	MessageTypeText     MessageType = "text"
-	MessageTypePicture  MessageType = "picture"
-	MessageTypeVideo    MessageType = "video"
-	MessageTypeFile     MessageType = "file"
-	MessageTypeSticker  MessageType = "sticker"
-	MessageTypeContact  MessageType = "contact"
-	MessageTypeURL      MessageType = "url"
-	MessageTypeLocation MessageType = "location"
+	MessageTypeText            MessageType = "text"
+	MessageTypePicture         MessageType = "picture"
+	MessageTypeVideo           MessageType = "video"
+	MessageTypeFile            MessageType = "file"
+	MessageTypeSticker         MessageType = "sticker"
+	MessageTypeContact         MessageType = "contact"
+	MessageTypeURL             MessageType = "url"
+	MessageTypeLocation        MessageType = "location"
+	MessageTypeCarouselContent MessageType = "carousel content"
 )
 
 // MessageType represents message type.

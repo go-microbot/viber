@@ -16,4 +16,8 @@ type Bot interface {
 	SetWebhook(ctx context.Context, req apiModels.SetWebhookRequest) (*apiModels.SetWebhookResponse, error)
 	// https://developers.viber.com/docs/api/rest-bot-api/#removing-your-webhook.
 	RemoveWebhook(ctx context.Context) error
+	// https://developers.viber.com/docs/api/rest-bot-api/#text-message.
+	SendTextMessage(ctx context.Context, req apiModels.SendTextMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#picture-message.
+	SendPictureMessage(ctx context.Context, req apiModels.SendPictureMessageRequest) (*apiModels.MessageResponse, error)
 }

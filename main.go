@@ -52,7 +52,20 @@ func main() {
 			case models.EventTypeWebhook:
 				fmt.Println("webhook successfully installed")
 			case models.EventTypeMessage:
-				// TODO: add
+				// send "hello" message.
+				_, err := myBot.API().SendTextMessage(context.Background(), apiModels.SendTextMessageRequest{
+					GeneralMessageRequest: apiModels.GeneralMessageRequest{
+						Receiver: event.Sender.ID,
+						Type:     models.MessageTypeText,
+						Sender: apiModels.MessageSender{
+							Name: "Greeting bot",
+						},
+					},
+					Text: fmt.Sprintf("Hello, %s!", event.Sender.Name),
+				})
+				if err != nil {
+					fmt.Printf("could not send message to user: %v", err)
+				}
 			}
 		case err, ok := <-errs:
 			if !ok {
