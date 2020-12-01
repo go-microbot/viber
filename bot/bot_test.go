@@ -11,8 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var errMock = errors.New("error")
-
 type testStrategy struct {
 	fn     func(strategy *testStrategy)
 	events chan models.CallbackEvent

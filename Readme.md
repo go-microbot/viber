@@ -2,7 +2,7 @@
 
 ## This is fully documented and easy to use go-bindings for working with the Bot [Viber](https://www.viber.com/ru/) API.
 
-[![Coverage Status](https://coveralls.io/repos/github/go-microbot/telegram/badge.svg)](https://coveralls.io/github/go-microbot/telegram)
+[![Coverage Status](https://coveralls.io/repos/github/go-microbot/viber/badge.svg)](https://coveralls.io/github/go-microbot/viber)
 
 <p align="center">
   <img height="120" src="./.github/assets/gopher.png">

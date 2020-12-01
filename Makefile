@@ -13,11 +13,3 @@ gen-mocks:
 ## run tests
 test:
 	go test -p 1 -timeout 15m -covermode=count -coverprofile=coverage.out -coverpkg=./api/.,./bot/...,./query/...,./form/... ./api/. ./bot/... ./query/... ./form/...
-
-## start docker containers
-start_images:
-	docker run --publish 8081:8081 -it --rm -d --name telegram-bot-api huntechio/telegram-bot-api:master-7cf91e4 --api-id=${TEST_API_ID} --api-hash=${TEST_API_HASH}
-
-## stop docker containers
-stop_images:
-	docker rm -f telegram-bot-api || true

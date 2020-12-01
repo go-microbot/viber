@@ -1,0 +1,59 @@
+linters-settings:
+  govet:
+    check-shadowing: false
+  gocyclo:
+    min-complexity: 20
+  maligned:
+    suggest-new: true
+  gocritic:
+    color: true
+    shorterErrLocation: true
+
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - hugeParam
+  gomnd:
+    settings:
+      mnd:
+        ignored-numbers: "100"
+
+linters:
+  enable:
+    - golint
+    - megacheck
+    - interfacer
+    - unconvert
+    - goconst
+    - misspell
+    - unparam
+    - gofmt
+    - goimports
+    - gocyclo
+    - gocritic
+    - govet
+    - unused
+    - prealloc
+    - whitespace
+    - gocognit
+    - gomnd
+
+issues:
+  exclude-use-default: false
+  max-same-issues: 10
+  exclude-rules:
+    - path: mocks.go
+      linters:
+        - gomnd
+    - path: _test\.go
+      linters:
+        - unused
+        - goconst
+    - path: gen\.go
+      linters:
+        - unused
+        - gocritic
+        - gocognit
+        - gosimple

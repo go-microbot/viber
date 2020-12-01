@@ -1,1 +1,1 @@
-# [GO-MICROBOT] Telegram Bot Examples
+# [GO-MICROBOT] Viber Bot Examples

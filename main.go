@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	const token = 
+	const token = "4a469cd7c3a7d3e1-68a8c9aa88a12bd0-4a1b188c560b602a"
 
 	// init Bot API with token.
 	botAPI := api.NewViberAPI(token)

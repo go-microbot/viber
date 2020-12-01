@@ -13,11 +13,8 @@ import (
 )
 
 const (
-	authTokenHeader = "X-Viber-Auth-Token"
-)
-
-const (
 	contentTypeHeader = "Content-Type"
+	authTokenHeader   = "X-Viber-Auth-Token"
 )
 
 // Response represents base API response.
@@ -45,21 +42,6 @@ type RequestBody struct {
 
 // BodyMarshaler represents body marshaler func.
 type BodyMarshaler func(v interface{}, ct *string) ([]byte, error)
-
-type apiResponse struct {
-	OK bool `json:"ok"`
-	badResponse
-	goodResponse
-}
-
-type badResponse struct {
-	ErrorCode   int    `json:"error_code,omitempty"`
-	Description string `json:"description,omitempty"`
-}
-
-type goodResponse struct {
-	Result json.RawMessage `json:"result,omitempty"`
-}
 
 // NewJSONBody returns new RequestBody with JSON marshaler.
 func NewJSONBody(body interface{}) *RequestBody {
@@ -154,21 +136,19 @@ func (req *Request) Do(ctx context.Context) (*Response, error) {
 		return nil, newErr(ErrSendReq, err)
 	}
 
-	// try to parse API body.
-	respBody, err := parseResponseBody(result.Body)
-	/*if err == nil {
-		result.Status = respBody.Description
-		result.StatusCode = respBody.ErrorCode
-	}
-
-	// check response status code.
 	if !isValidStatusCode(result.StatusCode) {
 		return nil, newErr(ErrResponse,
 			fmt.Errorf("status %d: %s", result.StatusCode, result.Status))
-	}*/
+	}
+
+	// try to parse response body.
+	respBody, err := parseResponseBody(result.Body)
+	if err != nil {
+		return nil, newErr(ErrDecodeBody, err)
+	}
 
 	return &Response{
-		resp: respBody.Result,
+		resp: respBody,
 	}, nil
 }
 
@@ -182,11 +162,25 @@ func (res *Response) Decode(resp interface{}) error {
 }
 
 func (req *Request) prepareBody() (io.Reader, error) {
+	var cType string
+
+	defer func() {
+		// set default headers.
+		if len(req.headers) == 0 {
+			req.headers = make(map[string]string)
+		}
+		if _, ok := req.headers[contentTypeHeader]; !ok && cType != "" {
+			req.headers[contentTypeHeader] = cType
+		}
+		if _, ok := req.headers[authTokenHeader]; !ok {
+			req.headers[authTokenHeader] = req.token
+		}
+	}()
+
 	if req.body == nil {
 		return nil, nil
 	}
 
-	var cType string
 	data, err := req.body.Marshal(&cType)
 	if err != nil {
 		return nil, err
@@ -197,28 +191,12 @@ func (req *Request) prepareBody() (io.Reader, error) {
 		cType = http.DetectContentType(data)
 	}
 
-	if len(req.headers) == 0 {
-		req.headers = make(map[string]string)
-	}
-
-	if _, ok := req.headers[contentTypeHeader]; !ok {
-		req.headers[contentTypeHeader] = cType
-	}
-
 	return bytes.NewBuffer(data), nil
 }
 
 func (req *Request) setHeaders(request *http.Request) {
-	if req.headers == nil {
-		req.headers = map[string]string{}
-	}
-
 	for k, v := range req.headers {
 		request.Header.Set(k, v)
-	}
-
-	if _, ok := req.headers[authTokenHeader]; !ok {
-		request.Header.Set(authTokenHeader, req.token)
 	}
 }
 
@@ -232,7 +210,7 @@ func (req *Request) encodeQuery(request *http.Request) string {
 }
 
 func isValidStatusCode(statusCode int) bool {
-	return statusCode == 0 || statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices
+	return statusCode >= http.StatusOK && statusCode < http.StatusMultipleChoices
 }
 
 func jsonMarsaler(v interface{}, ct *string) ([]byte, error) {
@@ -243,17 +221,15 @@ func jsonMarsaler(v interface{}, ct *string) ([]byte, error) {
 	return json.Marshal(v)
 }
 
-func parseResponseBody(body io.ReadCloser) (apiResponse, error) {
-	var resp apiResponse
+func parseResponseBody(body io.ReadCloser) (json.RawMessage, error) {
+	var resp json.RawMessage
 
-	var bb map[string]interface{}
-	if err := json.NewDecoder(body).Decode(&bb); err != nil {
-		return apiResponse{}, err
+	if err := json.NewDecoder(body).Decode(&resp); err != nil {
+		return nil, err
 	}
-	fmt.Println(bb)
 
 	if err := body.Close(); err != nil {
-		return apiResponse{}, err
+		return nil, err
 	}
 
 	return resp, nil

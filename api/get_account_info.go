@@ -7,7 +7,6 @@ import (
 )
 
 // GetAccountInfo represents method to fetch the account’s details as registered in Viber.
-// https://chatapi.viber.com/pa/get_account_info.
 func (api *ViberAPI) GetAccountInfo(ctx context.Context) (*models.AccountInfo, error) {
 	resp, err := api.NewRequest("get_account_info").Do(ctx)
 	if err != nil {

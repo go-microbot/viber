@@ -9,6 +9,7 @@ const (
 	EventTypeSubscribed          EventType = "subscribed"
 	EventTypeMessage             EventType = "message"
 	EventTypeUnsubscribed        EventType = "unsubscribed"
+	EventTypeWebhook             EventType = "webhook"
 )
 
 // There are available conversation started event types.
