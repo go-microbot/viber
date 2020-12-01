@@ -32,8 +32,7 @@ jobs:
 
     - name: Install ngrok
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y ngrok-client
+        sudo snap install ngrok
 
     - name: Run Tests
       run: |
