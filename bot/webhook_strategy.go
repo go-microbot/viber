@@ -77,4 +77,6 @@ func (h *webHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.events <- event
+
+	w.WriteHeader(http.StatusOK)
 }

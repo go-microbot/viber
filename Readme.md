@@ -22,7 +22,6 @@
   - [Webhook](#webhook)
 - [Example](#example)
 - [Test](#test)
-  - [Start Docker Containers](#start-docker-containers)
   - [Local testing](#run-tests-locally)
   - [Lint](#run-linter)
 
@@ -189,24 +188,6 @@ func main() {
 See the [examples](./examples) folder to get all available examples.
 
 ## Test
-
-**NOTE**
-> Download and install [Docker](https://docs.docker.com/) before running tests locally.
-
-### Start Docker Containers
-Create your [Telegram Application](https://core.telegram.org/api/obtaining_api_id).
-
-The mandatory options are `--api-id` and `--api-hash`. You must obtain your own `api_id` and `api_hash` as described in https://core.telegram.org/api/obtaining_api_id and specify them using the `--api-id` and `--api-hash` options or the `TELEGRAM_API_ID` and `TELEGRAM_API_HASH` environment variables.
-
-Use the following command:
-```bash
-docker run --publish 8081:8081 -it --rm -d --name telegram-bot-api huntechio/telegram-bot-api:master-7cf91e4 --api-id=${TEST_API_ID} --api-hash=${TEST_API_HASH}
-```
-
-Or use [Makefile](./Makefile)'s `start_images` command:
-```bash
-make start_images
-```
 
 ### Run tests locally
 To run tests locally please specify the `TEST_BOT_TOKEN` env variable. It should contains your bot token.
