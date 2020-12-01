@@ -5,31 +5,38 @@ import (
 	"fmt"
 
 	"github.com/go-microbot/viber/api"
+	apiModels "github.com/go-microbot/viber/api/models"
 	"github.com/go-microbot/viber/bot"
+	"github.com/go-microbot/viber/models"
 )
+
+const token = "4a469cd7c3a7d3e1-68a8c9aa88a12bd0-4a1b188c560b602a"
 
 //nolint
 func main() {
-	const token = "4a469cd7c3a7d3e1-68a8c9aa88a12bd0-4a1b188c560b602a"
-
 	// init Bot API with token.
 	botAPI := api.NewViberAPI(token)
-
-	info, err := botAPI.GetAccountInfo(context.Background())
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(info)
-
-	return
 
 	// create Bot instance.
 	myBot := bot.NewViberBot(&botAPI)
 
 	// start listening.
 	go myBot.WaitForUpdates(bot.NewWebhookStrategy(bot.WebhookConfig{
-		ServeURL: "localhost:8443", // server to catch Telegram requests.
+		ServeURL: "localhost:8443", // server to catch Viber requests.
 	}))
+
+	// setup Webhook.
+	go func() {
+		whResp, err := botAPI.SetWebhook(context.Background(), apiModels.SetWebhookRequest{
+			URL: "https://55442d01e546.ngrok.io", // use your website URL (SSL required).
+		})
+		if err != nil {
+			panic(err)
+		}
+		if whResp.Status != models.ResponseStatusCodeOK {
+			panic(fmt.Sprintf("request to set webhook returned unexpected status: %d - %s", whResp.Status, whResp.StatusMessage))
+		}
+	}()
 
 	// listen Bot's events.
 	events, errs := myBot.Callbacks()
@@ -37,20 +44,29 @@ func main() {
 		select {
 		case event, ok := <-events:
 			if !ok {
-				fmt.Println("updates channel closed")
+				fmt.Println("events channel closed")
 				return
 			}
 
-			fmt.Println(event)
-			/*// reply "hello" message.
-			_, err := myBot.API().SendMessage(context.Background(), apiModels.SendMessageRequest{
-				ChatID:           query.NewParamAny(update.Message.Chat.ID),
-				Text:             fmt.Sprintf("Hello, %s!", update.Message.From.Username),
-				ReplyToMessageID: &update.Message.ID,
-			})
-			if err != nil {
-				panic(err)
-			}*/
+			switch event.Event {
+			case models.EventTypeWebhook:
+				fmt.Println("webhook successfully installed")
+			case models.EventTypeMessage:
+				// send "hello" message.
+				_, err := myBot.API().SendTextMessage(context.Background(), apiModels.SendTextMessageRequest{
+					GeneralMessageRequest: apiModels.GeneralMessageRequest{
+						Receiver: event.Sender.ID,
+						Type:     models.MessageTypeText,
+						Sender: apiModels.MessageSender{
+							Name: "Greeting bot",
+						},
+					},
+					Text: fmt.Sprintf("Hello, %s!", event.Sender.Name),
+				})
+				if err != nil {
+					fmt.Printf("could not send message to user: %v", err)
+				}
+			}
 		case err, ok := <-errs:
 			if !ok {
 				fmt.Println("errors channel closed")
