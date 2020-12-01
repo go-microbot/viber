@@ -10,9 +10,8 @@ import (
 	"github.com/go-microbot/viber/models"
 )
 
-const token = "4a469cd7c3a7d3e1-68a8c9aa88a12bd0-4a1b188c560b602a"
+const token = "<PASTE_YOUR_TOKEN_HERE>"
 
-//nolint
 func main() {
 	// init Bot API with token.
 	botAPI := api.NewViberAPI(token)
