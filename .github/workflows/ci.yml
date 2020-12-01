@@ -1,0 +1,44 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  test:
+    name: Prepare and Test
+
+    runs-on: ubuntu-latest
+    
+    env:
+      TEST_BOT_TOKEN: ${{ secrets.VIBER_BOT_TOKEN }}
+
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.13
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+
+    - name: Install ngrok
+      run: |
+        sudo snap install ngrok
+
+    - name: Run Tests
+      run: |
+        make test
+
+    - name: Send Coveralls report
+      uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: coverage.out
