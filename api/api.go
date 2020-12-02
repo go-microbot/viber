@@ -20,4 +20,18 @@ type Bot interface {
 	SendTextMessage(ctx context.Context, req apiModels.SendTextMessageRequest) (*apiModels.MessageResponse, error)
 	// https://developers.viber.com/docs/api/rest-bot-api/#picture-message.
 	SendPictureMessage(ctx context.Context, req apiModels.SendPictureMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#video-message.
+	SendVideoMessage(ctx context.Context, req apiModels.SendVideoMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#file-message.
+	SendFileMessage(ctx context.Context, req apiModels.SendFileMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#contact-message.
+	SendContactMessage(ctx context.Context, req apiModels.SendContactMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#location-message.
+	SendLocationMessage(ctx context.Context, req apiModels.SendLocationMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#url-message.
+	SendURLMessage(ctx context.Context, req apiModels.SendURLMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#sticker-message.
+	SendStickerMessage(ctx context.Context, req apiModels.SendStickerMessageRequest) (*apiModels.MessageResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#rich-media-message--carousel-content-message.
+	SendRichMediaMessage(ctx context.Context, req apiModels.SendRichMediaMessageRequest) (*apiModels.MessageResponse, error)
 }

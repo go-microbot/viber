@@ -54,6 +54,213 @@ func (_m *Bot) RemoveWebhook(ctx context.Context) error {
 	return r0
 }
 
+// SendContactMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendContactMessage(ctx context.Context, req apimodels.SendContactMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendContactMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendContactMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendFileMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendFileMessage(ctx context.Context, req apimodels.SendFileMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendFileMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendFileMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendLocationMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendLocationMessage(ctx context.Context, req apimodels.SendLocationMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendLocationMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendLocationMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendPictureMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendPictureMessage(ctx context.Context, req apimodels.SendPictureMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendPictureMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendPictureMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendRichMediaMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendRichMediaMessage(ctx context.Context, req apimodels.SendRichMediaMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendRichMediaMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendRichMediaMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendStickerMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendStickerMessage(ctx context.Context, req apimodels.SendStickerMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendStickerMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendStickerMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendTextMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendTextMessage(ctx context.Context, req apimodels.SendTextMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendTextMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendTextMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendURLMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendURLMessage(ctx context.Context, req apimodels.SendURLMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendURLMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendURLMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendVideoMessage provides a mock function with given fields: ctx, req
+func (_m *Bot) SendVideoMessage(ctx context.Context, req apimodels.SendVideoMessageRequest) (*apimodels.MessageResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *apimodels.MessageResponse
+	if rf, ok := ret.Get(0).(func(context.Context, apimodels.SendVideoMessageRequest) *apimodels.MessageResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*apimodels.MessageResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, apimodels.SendVideoMessageRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // SetWebhook provides a mock function with given fields: ctx, req
 func (_m *Bot) SetWebhook(ctx context.Context, req apimodels.SetWebhookRequest) (*apimodels.SetWebhookResponse, error) {
 	ret := _m.Called(ctx, req)

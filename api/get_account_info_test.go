@@ -15,7 +15,6 @@ func (h getAccountInfo) Test(ctx context.Context, t *testing.T) context.Context 
 	require.NoError(t, err)
 	require.NotNil(t, info)
 	require.Equal(t, models.ResponseStatusCodeOK, info.Status)
-	require.Equal(t, models.ResponseStatusNameOK, info.StatusMessage)
 	require.NotEmpty(t, info.Name)
 	require.NotEmpty(t, info.Members)
 

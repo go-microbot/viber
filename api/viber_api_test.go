@@ -22,11 +22,16 @@ import (
 )
 
 const (
-	botNameCtxKey       = "bot_name"
-	webhookURLCtxKey    = "webhook_url"
-	chatMemberIDCtxKey  = "chat_member_id"
-	pictureToSendCtxKey = "pictute_url"
-	defaultWebhookPort  = "8443"
+	botNameCtxKey         = "bot_name"
+	webhookURLCtxKey      = "webhook_url"
+	chatMemberIDCtxKey    = "chat_member_id"
+	pictureToSendCtxKey   = "pictute_url"
+	videoToSendCtxKey     = "video_url"
+	videoToSendSizeCtxKey = "video_size"
+	fileToSendCtxKey      = "file_url"
+	fileToSendSizeCtxKey  = "file_size"
+	stickerIDCtxKey       = "sticker_id"
+	defaultWebhookPort    = "8443"
 )
 
 var (
@@ -115,6 +120,34 @@ func TestViberAPI_Integration(t *testing.T) {
 		{
 			name:        "sendPictureMessage",
 			testHandler: sendPictureMessage{},
+		},
+		{
+			name:        "sendVideoMessage",
+			testHandler: sendVideoMessage{},
+		},
+		{
+			name:        "sendFileMessage",
+			testHandler: sendFileMessage{},
+		},
+		{
+			name:        "sendContactMessage",
+			testHandler: sendContactMessage{},
+		},
+		{
+			name:        "sendLocationMessage",
+			testHandler: sendLocationMessage{},
+		},
+		{
+			name:        "sendURLMessage",
+			testHandler: sendURLMessage{},
+		},
+		{
+			name:        "sendStickerMessage",
+			testHandler: sendStickerMessage{},
+		},
+		{
+			name:        "sendRichMediaMessage",
+			testHandler: sendRichMediaMessage{},
 		},
 	}
 	for i := range testCases {

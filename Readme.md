@@ -17,9 +17,8 @@
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Create bot token](#bot-token)
-- [Update Strategies](#update-strategies)
-  - [Long Polling](#long-polling)
-  - [Webhook](#webhook)
+- [Callbacks](#callbacks)
+  - [Setup Webhook](#webhook)
 - [Example](#example)
 - [Test](#test)
   - [Local testing](#run-tests-locally)
@@ -37,75 +36,11 @@ go get -u github.com/go-microbot/viber
 ### Bot token
 Create your own bot token. Follow the [Official guide](https://partners.viber.com/account/create-bot-account).
 
-## Update Strategies
-There are two mutually exclusive ways of receiving updates for your bot — the `Long Polling` on one hand and `Webhooks` on the other. Incoming updates are stored on the server until the bot receives them either way, but they will not be kept longer than 24 hours.
-
-### Long Polling
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-
-	"github.com/go-microbot/telegram/api"
-	apiModels "github.com/go-microbot/telegram/api/models"
-	"github.com/go-microbot/telegram/bot"
-	"github.com/go-microbot/telegram/query"
-)
-
-const telegramBotToken = "<PASTE_YOUR_TOKEN_HERE>"
-
-func main() {
-	// init Bot API with token.
-	botAPI := api.NewTelegramAPI(telegramBotToken)
-
-	// create Bot instance.
-	myBot := bot.NewTelegramBot(&botAPI)
-
-	// delete webhook (if it was using before).
-	if err := myBot.API().DeleteWebhook(context.Background()); err != nil {
-		fmt.Printf("could not remove webhook: %v", err)
-	}
-
-	// start long polling.
-	go myBot.WaitForUpdates(bot.NewUpdatesStrategyLongPolling(bot.LongPollingConfig{
-		Timeout: 10,
-		BotAPI:  &botAPI,
-	}))
-
-	// listen Bot's updates.
-	updates, errs := myBot.Updates()
-	for {
-		select {
-		case update, ok := <-updates:
-			if !ok {
-				fmt.Println("updates channel closed")
-				return
-			}
-
-			// reply "hello" message.
-			_, err := myBot.API().SendMessage(context.Background(), apiModels.SendMessageRequest{
-				ChatID:           query.NewParamAny(update.Message.Chat.ID),
-				Text:             fmt.Sprintf("Hello, %s!", update.Message.From.Username),
-				ReplyToMessageID: &update.Message.ID,
-			})
-			if err != nil {
-				panic(err)
-			}
-		case err, ok := <-errs:
-			if !ok {
-				fmt.Println("errors channel closed")
-				return
-			}
-			fmt.Println(err)
-		}
-	}
-}
-```
+## Callbacks
+Each callback will contain a signature on the JSON passed to the callback. The signature is HMAC with SHA256 that will use the authentication token as the key and the JSON as the value. The result will be passed as HTTP Header `X-Viber-Content-Signature` so the receiver can determine the origin of the message.
 
 ### Webhook
-To use a self-signed certificate, you need to create your [public key certificate](https://core.telegram.org/bots/self-signed). 
+For more information see [Setting a Webhook](https://developers.viber.com/docs/api/rest-bot-api/#setting-a-webhook) article. 
 
 ```go
 package main
@@ -113,63 +48,68 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 
-	"github.com/go-microbot/telegram/api"
-	apiModels "github.com/go-microbot/telegram/api/models"
-	"github.com/go-microbot/telegram/bot"
-	"github.com/go-microbot/telegram/form"
-	"github.com/go-microbot/telegram/query"
+	"github.com/go-microbot/viber/api"
+	apiModels "github.com/go-microbot/viber/api/models"
+	"github.com/go-microbot/viber/bot"
+	"github.com/go-microbot/viber/models"
 )
 
-const telegramBotToken = "<PASTE_YOUR_TOKEN_HERE>"
+const token = "<PASTE_YOUR_TOKEN_HERE>"
 
 func main() {
 	// init Bot API with token.
-	botAPI := api.NewTelegramAPI(telegramBotToken)
+	botAPI := api.NewViberAPI(token)
 
 	// create Bot instance.
-	myBot := bot.NewTelegramBot(&botAPI)
-
-	// read certificate data.
-	data, err := ioutil.ReadFile("telegram_test.key")
-	if err != nil {
-		panic(err)
-	}
-
-	// set webhook.
-	req := apiModels.SetWebhookRequest{
-		Certificate: form.NewPartText(string(data)),
-		URL:         query.NewParamString("https://53ec7fc0c840.ngrok.io"), // ngrok, you need to use your server URL.
-	}
-	err = myBot.API().SetWebhook(context.Background(), req)
-	if err != nil {
-		panic(err)
-	}
+	myBot := bot.NewViberBot(&botAPI)
 
 	// start listening.
-	go myBot.WaitForUpdates(bot.NewUpdatesStrategyWebhook(bot.WebhookConfig{
-		ServeURL: "localhost:8443", // server to catch Telegram requests.
+	go myBot.WaitForUpdates(bot.NewWebhookStrategy(bot.WebhookConfig{
+		ServeURL: "localhost:8443", // server to catch Viber requests.
 	}))
 
-	// listen Bot's updates.
-	updates, errs := myBot.Updates()
+	// setup Webhook.
+	go func() {
+		whResp, err := botAPI.SetWebhook(context.Background(), apiModels.SetWebhookRequest{
+			URL: "https://55442d01e546.ngrok.io", // use your website URL (SSL required).
+		})
+		if err != nil {
+			panic(err)
+		}
+		if whResp.Status != models.ResponseStatusCodeOK {
+			panic(fmt.Sprintf("request to set webhook returned unexpected status: %d - %s", whResp.Status, whResp.StatusMessage))
+		}
+	}()
+
+	// listen Bot's events.
+	events, errs := myBot.Callbacks()
 	for {
 		select {
-		case update, ok := <-updates:
+		case event, ok := <-events:
 			if !ok {
-				fmt.Println("updates channel closed")
+				fmt.Println("events channel closed")
 				return
 			}
 
-			// reply "hello" message.
-			_, err := myBot.API().SendMessage(context.Background(), apiModels.SendMessageRequest{
-				ChatID:           query.NewParamAny(update.Message.Chat.ID),
-				Text:             fmt.Sprintf("Hello, %s!", update.Message.From.Username),
-				ReplyToMessageID: &update.Message.ID,
-			})
-			if err != nil {
-				panic(err)
+			switch event.Event {
+			case models.EventTypeWebhook:
+				fmt.Println("webhook successfully installed")
+			case models.EventTypeMessage:
+				// send "hello" message.
+				_, err := myBot.API().SendTextMessage(context.Background(), apiModels.SendTextMessageRequest{
+					GeneralMessageRequest: apiModels.GeneralMessageRequest{
+						Receiver: event.Sender.ID,
+						Type:     models.MessageTypeText,
+						Sender: apiModels.MessageSender{
+							Name: "Greeting bot",
+						},
+					},
+					Text: fmt.Sprintf("Hello, %s!", event.Sender.Name),
+				})
+				if err != nil {
+					fmt.Printf("could not send message to user: %v", err)
+				}
 			}
 		case err, ok := <-errs:
 			if !ok {
@@ -182,7 +122,7 @@ func main() {
 }
 ```
 
-> Ports currently supported for Webhooks: **443**, **80**, **88**, **8443**.
+> Viber **doesn’t support** self signed certificates.
 
 ## Example
 See the [examples](./examples) folder to get all available examples.
