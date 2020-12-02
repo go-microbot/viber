@@ -1,3 +1,8 @@
 {
-    "pictute_url": "https://9p.io/plan9/img/plan9bunnywhite.jpg"
+    "pictute_url": "https://9p.io/plan9/img/plan9bunnywhite.jpg",
+    "video_url": "http://techslides.com/demos/sample-videos/small.mp4",
+    "video_size": 1000,
+    "file_url": "http://www.africau.edu/images/default/sample.pdf",
+    "file_size": 3028,
+    "sticker_id": 40131
 }

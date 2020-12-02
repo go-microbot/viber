@@ -11,7 +11,7 @@ type AccountInfo struct {
 	// Failure: invalidUrl, invalidAuthToken, badData, missingData and failure.
 	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
 	// table for additional information.
-	StatusMessage ResponseStatusName `json:"status_message"`
+	StatusMessage string `json:"status_message"`
 	// Unique numeric id of the account.
 	ID string `json:"id"`
 	// Account name. Max 75 characters.

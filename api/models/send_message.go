@@ -127,7 +127,7 @@ type SendTextMessageRequest struct {
 // MessageResponse represents default message response model.
 type MessageResponse struct {
 	Status        models.ResponseStatusCode `json:"status"`
-	StatusMessage models.ResponseStatusName `json:"status_message"`
+	StatusMessage string                    `json:"status_message"`
 	MessageToken  int64                     `json:"message_token"`
 	ChatHostname  string                    `json:"chat_hostname"`
 }

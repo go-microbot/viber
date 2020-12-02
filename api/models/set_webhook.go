@@ -33,7 +33,7 @@ type SetWebhookResponse struct {
 	// Failure: "invalidUrl", "invalidAuthToken", "badData", "missingData" and "failure".
 	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
 	// table for additional information.
-	StatusMessage models.ResponseStatusName `json:"status_message"`
+	StatusMessage string `json:"status_message"`
 	// List of event types you will receive a callback for.
 	// Should return the same values sent in the request.
 	// "delivered", "seen", "failed", "subscribed", "unsubscribed" and "conversation_started".

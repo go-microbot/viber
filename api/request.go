@@ -9,7 +9,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/go-microbot/telegram/form"
+	"github.com/go-microbot/viber/form"
 )
 
 const (
