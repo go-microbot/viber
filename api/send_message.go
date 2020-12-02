@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net/http"
 
 	apiModels "github.com/go-microbot/viber/api/models"
 	"github.com/go-microbot/viber/models"
@@ -65,6 +66,7 @@ func (api *ViberAPI) SendRichMediaMessage(ctx context.Context, req apiModels.Sen
 func (api *ViberAPI) sendMessage(ctx context.Context, req interface{}) (*apiModels.MessageResponse, error) {
 	resp, err := api.NewRequest("send_message").
 		Body(NewJSONBody(req)).
+		Method(http.MethodPost).
 		Do(ctx)
 	if err != nil {
 		return nil, err

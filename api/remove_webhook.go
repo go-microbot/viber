@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net/http"
 
 	apiModels "github.com/go-microbot/viber/api/models"
 )
@@ -10,6 +11,7 @@ import (
 func (api *ViberAPI) RemoveWebhook(ctx context.Context) error {
 	_, err := api.NewRequest("set_webhook").
 		Body(NewJSONBody(apiModels.SetWebhookRequest{})).
+		Method(http.MethodPost).
 		Do(ctx)
 
 	return err

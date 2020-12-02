@@ -68,6 +68,26 @@ const (
 	InternalBrowserActionButtonNone           InternalBrowserActionButton = "none"
 )
 
+// There are available internal browser title types.
+const (
+	InternalBrowserTitleTypeDomain  InternalBrowserTitleType = "domain"
+	InternalBrowserTitleTypeDefault InternalBrowserTitleType = "default"
+)
+
+// There are available internal browser mods.
+const (
+	InternalBrowserModeFullscreen          InternalBrowserMode = "fullscreen"
+	InternalBrowserModeFullscreenPortrait  InternalBrowserMode = "fullscreen-portrait"
+	InternalBrowserModeFullscreenLandscape InternalBrowserMode = "fullscreen-landscape"
+	InternalBrowserModePartialSize         InternalBrowserMode = "partial-size"
+)
+
+// There are available internal browser footer types.
+const (
+	InternalBrowserFooterTypeDefault InternalBrowserFooterType = "default"
+	InternalBrowserFooterTypeHidden  InternalBrowserFooterType = "hidden"
+)
+
 // GeneralMessageRequest represents general message request model.
 type GeneralMessageRequest struct {
 	// Unique Viber user id. Required, subscribed valid user ID.
@@ -315,6 +335,16 @@ type MessageButton struct {
 	// JSON Object, which includes internal browser configuration
 	// for open-url action with internal type.
 	InternalBrowser *InternalBrowserConfig `json:"InternalBrowser,omitempty"`
+	// Optional (api level 6).
+	// JSON Object, which includes map configuration for open-map action with internal type.
+	Map *MapConfig `json:"Map,omitempty"`
+	// Optional (api level 6). JSON Object.
+	// Draw frame above the background on the button,
+	// the size will be equal the size of the button.
+	Frame *FrameConfig `json:"Frame,omitempty"`
+	// Optional (api level 6). JSON Object.
+	// Specifies media player options. Will be ignored if OpenURLMediaType is not video or audio.
+	MediaPlayer *MediaPlayerConfig `json:"MediaPlayer,omitempty"`
 }
 
 // BgButtonMediaType represents type of the background media button.
@@ -362,7 +392,63 @@ type InternalBrowserConfig struct {
 	// domain means the top level domain.
 	// Default is default.
 	TitleType InternalBrowserTitleType `json:"TitleType,omitempty"`
+	// Optional (api level 3). Custom text for internal’s browser title,
+	// TitleType will be ignored in case this key is presented. String up to 15 characters.
+	CustomTitle string `json:"CustomTitle,omitempty"`
+	// Optional (api level 3).
+	// Indicates that browser should be opened in a full screen or in partial size
+	// (50% of screen height). Full screen mode can be with orientation lock
+	// (both orientations supported, only landscape or only portrait).
+	// Default is fullscreen.
+	Mode InternalBrowserMode `json:"Mode,omitempty"`
+	// Optional (api level 3).
+	// Should the browser’s footer will be displayed (default) or not (hidden).
+	// Default is default.
+	FooterType InternalBrowserFooterType `json:"FooterType,omitempty"`
+	// Optional (api level 6).
+	// Custom reply data for send-to-bot action that will be resent in msgInfo.
+	ActionReplyData string `json:"ActionReplyData,omitempty"`
 }
 
 // InternalBrowserActionButton represents internal browser action button.
 type InternalBrowserActionButton string
+
+// InternalBrowserTitleType represents internal browser title type.
+type InternalBrowserTitleType string
+
+// InternalBrowserMode represents internal browser mode.
+type InternalBrowserMode string
+
+// InternalBrowserFooterType represents internal browser footer type.
+type InternalBrowserFooterType string
+
+// MapConfig represents map configuration.
+type MapConfig struct {
+	// Optional (api level 6). Location latitude (format: "12.12345").
+	Latitude float64 `json:"Latitude,omitempty"`
+	// Optional (api level 6). Location longitude (format: "3.12345").
+	Longitude float64 `json:"Longitude,omitempty"`
+}
+
+// FrameConfig represents frame configuration.
+type FrameConfig struct {
+	// Optional (api level 6). Width of border. 0..10. Default is 1.
+	BorderWidth int64 `json:"BorderWidth,omitempty"`
+	// Optional (api level 6). Color of border. Hex color #XXXXXX. Default is #000000.
+	BorderColor string `json:"BorderColor,omitempty"`
+	// Optional (api level 6). The border will be drawn with rounded corners. 0..10. Default is 0.
+	CornerRadius int64 `json:"CornerRadius,omitempty"`
+}
+
+// MediaPlayerConfig represents media player configuration.
+type MediaPlayerConfig struct {
+	// Optional (api level 6). Media player’s title (first line).
+	Title string `json:"Title,omitempty"`
+	// Optional (api level 6). Media player’s subtitle (second line).
+	Subtitle string `json:"Subtitle,omitempty"`
+	// Optional (api level 6). The URL for player’s thumbnail (background).
+	ThumbnailURL string `json:"ThumbnailURL,omitempty"`
+	// Optional (api level 6). Whether the media player should be looped forever or not.
+	// Default is false.
+	Loop bool `json:"Loop,omitempty"`
+}
