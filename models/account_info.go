@@ -3,15 +3,6 @@ package models
 // AccountInfo represents account details info.
 // https://developers.viber.com/docs/api/rest-bot-api/#response-1.
 type AccountInfo struct {
-	// Action result. 0 for success. In case of failure – appropriate failure status number.
-	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
-	// table for additional information.
-	Status ResponseStatusCode `json:"status"`
-	// OK or failure reason. Success: ok.
-	// Failure: invalidUrl, invalidAuthToken, badData, missingData and failure.
-	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
-	// table for additional information.
-	StatusMessage string `json:"status_message"`
 	// Unique numeric id of the account.
 	ID string `json:"id"`
 	// Account name. Max 75 characters.

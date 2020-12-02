@@ -1,6 +1,8 @@
 package models
 
-import "github.com/go-microbot/viber/models"
+import (
+	"github.com/go-microbot/viber/models"
+)
 
 // There are available button background image types.
 const (
@@ -88,6 +90,20 @@ const (
 	InternalBrowserFooterTypeHidden  InternalBrowserFooterType = "hidden"
 )
 
+// There are available input field states.
+const (
+	InputFieldStateRegular   InputFieldState = "regular"
+	InputFieldStateMinimized InputFieldState = "minimized"
+	InputFieldStateHidden    InputFieldState = "hidden"
+)
+
+// There are available favorite metadata types.
+const (
+	FavoritesMetadataTypeGif   FavoritesMetadataType = "gif"
+	FavoritesMetadataTypeLink  FavoritesMetadataType = "link"
+	FavoritesMetadataTypeVideo FavoritesMetadataType = "video"
+)
+
 // GeneralMessageRequest represents general message request model.
 type GeneralMessageRequest struct {
 	// Unique Viber user id. Required, subscribed valid user ID.
@@ -106,6 +122,13 @@ type GeneralMessageRequest struct {
 	// Certain features may not work as expected
 	// if set to a number that’s below their requirements.
 	MinAPIVersion int64 `json:"min_api_version,omitempty"`
+	// Keyboards can be attached to any message type and be sent and displayed together.
+	// To attach a keyboard to a message simply add the keyboard’s parameters to the message JSON.
+	Keyboard *MessageKeyboard `json:"keyboard,omitempty"`
+	// This parameter defines the recipients for the message.
+	// Every user must be subscribed and have a valid user id.
+	// The maximum list length is 300 receivers.
+	BroadcastList []string `json:"broadcast_list,omitempty"`
 }
 
 // MessageSender represents message's sender model.
@@ -119,17 +142,36 @@ type MessageSender struct {
 
 // SendTextMessageRequest represents model to send text message.
 type SendTextMessageRequest struct {
-	GeneralMessageRequest
+	GeneralMessageRequest `json:",inline"`
 	// The text of the message. Required. Max length 7,000 characters.
 	Text string `json:"text"`
 }
 
 // MessageResponse represents default message response model.
 type MessageResponse struct {
+	// Action result. 0 for success.
+	// In case of failure – appropriate failure status number.
+	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
+	// table for additional information.
+	Status models.ResponseStatusCode `json:"status"`
+	// OK or failure reason. Success: ok.
+	// Failure: invalidUrl, invalidAuthToken, badData, missingData and failure.
+	// See error codes (https://developers.viber.com/docs/api/rest-bot-api/#errorCodes)
+	// table for additional information.
+	StatusMessage string `json:"status_message"`
+	// Unique ID of the message.
+	MessageToken int64  `json:"message_token"`
+	ChatHostname string `json:"chat_hostname,omitempty"`
+	// Contains all the receivers to which the message could not be sent properly.
+	// ONLY for Broadcast messages.
+	FailedList []FailedBroadcastMessageResponse `json:"failed_list,omitempty"`
+}
+
+// FailedBroadcastMessageResponse represents failed broadcast message response.
+type FailedBroadcastMessageResponse struct {
+	Receiver      string                    `json:"receiver"`
 	Status        models.ResponseStatusCode `json:"status"`
 	StatusMessage string                    `json:"status_message"`
-	MessageToken  int64                     `json:"message_token"`
-	ChatHostname  string                    `json:"chat_hostname"`
 }
 
 // SendPictureMessageRequest represents model to send picture message.
@@ -452,3 +494,77 @@ type MediaPlayerConfig struct {
 	// Default is false.
 	Loop bool `json:"Loop,omitempty"`
 }
+
+// MessageKeyboard represents message keyboard.
+type MessageKeyboard struct {
+	// Required. Array containing all keyboard buttons by order.
+	Buttons []MessageButton `json:"Buttons"`
+	// Optional. Background color of the keyboard. Valid color HEX value.
+	BgColor string `json:"BgColor,omitempty"`
+	// Optional. When true - the keyboard will always be displayed with
+	// the same height as the native keyboard
+	// When false - short keyboards will be displayed with
+	// the minimal possible height. Maximal height will be native keyboard height.
+	// Default is false.
+	DefaultHeight bool `json:"DefaultHeight,omitempty"`
+	// Optional (api level 3).
+	// How much percent of free screen space in chat should be taken by keyboard.
+	// The final height will be not less than height of system keyboard. 40..70.
+	CustomDefaultHeight int64 `json:"CustomDefaultHeight,omitempty"`
+	// Optional (api level 3).
+	// Allow use custom aspect ratio for Carousel content blocks.
+	// Scales the height of the default square block (which is defined on client side)
+	// to the given value in percents. It means blocks can become not square and
+	// it can be used to create Carousel content with correct custom aspect ratio.
+	// This is applied to all blocks in the Carousel content. 20..100. Default is 100.
+	HeightScale int64 `json:"HeightScale,omitempty"`
+	// Optional (api level 4).
+	// Represents size of block for grouping buttons during layout. 1-6. Default is 6.
+	ButtonsGroupColumns int64 `json:"ButtonsGroupColumns,omitempty"`
+	// Optional (api level 4). Represents size of block for grouping buttons during layout.
+	// 1-7. Default 7 for Carousel content; 2 for Keyboard.
+	ButtonsGroupRows int64 `json:"ButtonsGroupRows,omitempty"`
+	// Optional (api level 4).
+	// Customize the keyboard input field.
+	// regular - display regular size input field.
+	// minimized - display input field minimized by default.
+	// hidden - hide the input field.
+	// Default is regular.
+	InputFieldState InputFieldState `json:"InputFieldState,omitempty"`
+	// Optional (api level 6).
+	// JSON Object, which describes Carousel content to be saved via favorites bot,
+	// if saving is available.
+	FavoritesMetadata *FavoritesMetadata `json:"FavoritesMetadata,omitempty"`
+}
+
+// InputFieldState represents keyboard input field state.
+type InputFieldState string
+
+// FavoritesMetadata represents model to let the user save your content (gif, link, video)
+// to the user’s favorite extension. Later, when the user enters the favorites extended keyboard
+// and sends an item, the original Carousel content (rich message) will be sent.
+type FavoritesMetadata struct {
+	// Required. The type of content you serve.
+	Type FavoritesMetadataType `json:"type"`
+	// Required. Accessible url of content.
+	URL string `json:"url"`
+	// Optional. Title for your content.
+	Title string `json:"title"`
+	// Optional. Accessible thumbnail for your content (PNG, JPEG).
+	Thumbnail string `json:"thumbnail,omitempty"`
+	// Optional. The top domain of your content url.
+	Domain string `json:"domain,omitempty"`
+	// Optional. Width of your thumbnail image in pixels.
+	Width int64 `json:"width,omitempty"`
+	// Optional. Height of your thumbnail image in pixels.
+	Height int64 `json:"height,omitempty"`
+	// Optional. Alternative url for clients with apiVersion < minApiVersion,
+	// this will be sent by bot to client, then the client has to send it back.
+	AlternativeURL string `json:"alternativeUrl,omitempty"`
+	// Optional. Alternative title for the url for clients with apiVersion < minApiVersion,
+	// this will be sent by bot to client, then the client has to send it back.
+	AlternativeText string `json:"alternativeText,omitempty"`
+}
+
+// FavoritesMetadataType represents favorites metadata type.
+type FavoritesMetadataType string
