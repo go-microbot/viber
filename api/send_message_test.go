@@ -318,3 +318,70 @@ func (h sendRichMediaMessage) Test(ctx context.Context, t *testing.T) context.Co
 
 	return ctx
 }
+
+type sendMessageWithKeyboard struct{}
+
+func (h sendMessageWithKeyboard) Test(ctx context.Context, t *testing.T) context.Context {
+	memberID := ctx.Value(chatMemberIDCtxKey)
+	require.NotNil(t, memberID)
+
+	resp, err := testAPI.SendTextMessage(ctx, apiModels.SendTextMessageRequest{
+		GeneralMessageRequest: apiModels.GeneralMessageRequest{
+			Receiver: memberID.(string),
+			Sender: apiModels.MessageSender{
+				Name: "Bot",
+			},
+			MinAPIVersion: 7,
+			Keyboard: &apiModels.MessageKeyboard{
+				DefaultHeight: true,
+				Buttons: []apiModels.MessageButton{
+					{
+						ActionType: apiModels.ButtonActionTypeReply,
+						ActionBody: "reply to me",
+						Text:       "Key text",
+						TextSize:   apiModels.ButtonTextSizeRegular,
+					},
+				},
+			},
+		},
+		Text: "Test message with keyboard",
+	})
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.Equal(t, models.ResponseStatusCodeOK, resp.Status)
+
+	return ctx
+}
+
+type sendBroadcastMessage struct{}
+
+func (h sendBroadcastMessage) Test(ctx context.Context, t *testing.T) context.Context {
+	memberID := ctx.Value(chatMemberIDCtxKey)
+	require.NotNil(t, memberID)
+
+	resp, err := testAPI.SendTextMessage(ctx, apiModels.SendTextMessageRequest{
+		GeneralMessageRequest: apiModels.GeneralMessageRequest{
+			Sender: apiModels.MessageSender{
+				Name: "Bot",
+			},
+			Receiver:      memberID.(string),
+			BroadcastList: []string{memberID.(string), "invalid"},
+		},
+		Text: "Test broadcast message",
+	})
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.Equal(t, models.ResponseStatusCodeOK, resp.Status)
+	require.NotEmpty(t, resp.FailedList)
+	var found bool
+	for i := range resp.FailedList {
+		if resp.FailedList[i].Receiver == "invalid" {
+			require.Equal(t, resp.FailedList[i].Status, models.ResponseStatusCodeReceiverNotRegistered)
+			found = true
+			break
+		}
+	}
+	require.True(t, found)
+
+	return ctx
+}

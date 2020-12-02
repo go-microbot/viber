@@ -149,6 +149,18 @@ func TestViberAPI_Integration(t *testing.T) {
 			name:        "sendRichMediaMessage",
 			testHandler: sendRichMediaMessage{},
 		},
+		{
+			name:        "sendMessageWithKeyboard",
+			testHandler: sendMessageWithKeyboard{},
+		},
+		{
+			name:        "sendBroadcastMessage",
+			testHandler: sendBroadcastMessage{},
+		},
+		{
+			name:        "getUserDetails",
+			testHandler: getUserDetails{},
+		},
 	}
 	for i := range testCases {
 		tc := &testCases[i]
