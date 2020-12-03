@@ -1,7 +1,7 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-microbot/viber v0.2.0 h1:/yWY7VcyqEb58mNcV/6xK4p6qODu9e++1yJRmWbMxzI=
-github.com/go-microbot/viber v0.2.0/go.mod h1:zxiRubhhfIRz+68mddc2nUqXIACMyZjRhKWiKwc33Mc=
+github.com/go-microbot/viber v0.5.0 h1:pf0wk5UPivnUBU78Zk2j6daoCQ6jM4LkIC2LCUFuPAg=
+github.com/go-microbot/viber v0.5.0/go.mod h1:j05aJKGLrQd1LA7xVnBijhQDH34i81VPeNjmceuW5xg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

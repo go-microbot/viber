@@ -22,12 +22,16 @@ func main() {
 	// start listening.
 	go myBot.WaitForUpdates(bot.NewWebhookStrategy(bot.WebhookConfig{
 		ServeURL: "localhost:8443", // server to catch Viber requests.
+		// if you want to validate each callback signature add these parameters as well.
+		// More info: https://developers.viber.com/docs/api/rest-bot-api/#callbacks.
+		VerifySignature: true,
+		SignatureKey:    token,
 	}))
 
 	// setup Webhook.
 	go func() {
 		whResp, err := botAPI.SetWebhook(context.Background(), apiModels.SetWebhookRequest{
-			URL: "https://55442d01e546.ngrok.io", // use your website URL (SSL required).
+			URL: "https://03322284e668.ngrok.io", // use your website URL (SSL required).
 		})
 		if err != nil {
 			panic(err)

@@ -35,4 +35,6 @@ type Bot interface {
 	SendRichMediaMessage(ctx context.Context, req apiModels.SendRichMediaMessageRequest) (*apiModels.MessageResponse, error)
 	// https://developers.viber.com/docs/api/rest-bot-api/#get-user-details.
 	GetUserDetails(ctx context.Context, req apiModels.UserIDRequest) (*apiModels.UserDetailsResponse, error)
+	// https://developers.viber.com/docs/api/rest-bot-api/#get-online.
+	GetOnline(ctx context.Context, req apiModels.UserIDsRequest) (*apiModels.GetOnlineResponse, error)
 }
