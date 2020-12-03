@@ -63,14 +63,6 @@ func Test_NewJSONBody(t *testing.T) {
 	require.Equal(t, "test", b.body)
 }
 
-func Test_NewFormDataBody(t *testing.T) {
-	b := NewFormDataBody("test")
-	require.NotNil(t, b)
-	require.NotNil(t, b.body)
-	require.NotNil(t, b.m)
-	require.Equal(t, "test", b.body)
-}
-
 func TestViberAPI_NewRequest(t *testing.T) {
 	api := NewViberAPI("123")
 	req := api.NewRequest("test")

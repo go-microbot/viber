@@ -8,8 +8,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-
-	"github.com/go-microbot/viber/form"
 )
 
 const (
@@ -47,14 +45,6 @@ type BodyMarshaler func(v interface{}, ct *string) ([]byte, error)
 func NewJSONBody(body interface{}) *RequestBody {
 	return &RequestBody{
 		m:    jsonMarsaler,
-		body: body,
-	}
-}
-
-// NewFormDataBody returns new RequestBody with Form Data marshaler.
-func NewFormDataBody(body interface{}) *RequestBody {
-	return &RequestBody{
-		m:    form.Marshal,
 		body: body,
 	}
 }
