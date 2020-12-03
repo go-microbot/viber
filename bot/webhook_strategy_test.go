@@ -2,7 +2,12 @@ package bot
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"sync"
@@ -102,10 +107,6 @@ func TestStrategyWebhook_Listen(t *testing.T) {
 	expMessages := []string{"message 1", "message 2"}
 	require.Equal(t, expMessages, messages)
 	require.Equal(t, 2, len(errs))
-	for i := range errs {
-		_, ok := errs[i].(*json.SyntaxError)
-		require.True(t, ok)
-	}
 }
 
 func TestStrategyWebhook_Stop(t *testing.T) {
@@ -127,6 +128,32 @@ func TestStrategyWebhook_Stop(t *testing.T) {
 	time.Sleep(time.Second * 2)
 	hook.Stop()
 	wg.Wait()
+}
+
+func Test_validateMAC(t *testing.T) {
+	t.Run("parse signature error", func(t *testing.T) {
+		err := validateMAC(nil, "TT", "key")
+		require.Error(t, err)
+		require.EqualError(t, err, fmt.Errorf("could not decode signature: %v", errors.New("encoding/hex: invalid byte: U+0054 'T'")).Error())
+	})
+	t.Run("mac is invalid error", func(t *testing.T) {
+		err := validateMAC(nil, "", "key")
+		require.Error(t, err)
+		require.EqualError(t, err, fmt.Errorf("mac is invalid").Error())
+	})
+	t.Run("all ok", func(t *testing.T) {
+		key := "1234"
+		message := []byte("test")
+
+		mac := hmac.New(sha256.New, []byte(key))
+		_, err := mac.Write(message)
+		require.NoError(t, err)
+
+		signature := hex.EncodeToString(mac.Sum(nil))
+
+		err = validateMAC(message, signature, key)
+		require.NoError(t, err)
+	})
 }
 
 func closeBody(t *testing.T, body io.ReadCloser) {
