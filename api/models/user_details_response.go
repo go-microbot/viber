@@ -16,9 +16,9 @@ type DetailsResponse struct {
 	// The Viber version installed on the user’s primary device.
 	ViberVersion string `json:"viber_version,omitempty"`
 	// Mobile country code.
-	MCC string `json:"mcc,omitempty"`
+	MCC int64 `json:"mcc,omitempty"`
 	// Mobile network code.
-	MNC string `json:"mnc,omitempty"`
+	MNC int64 `json:"mnc,omitempty"`
 	// The user’s device type.
 	DeviceType string `json:"device_type,omitempty"`
 }
