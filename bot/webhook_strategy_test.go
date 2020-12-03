@@ -107,10 +107,6 @@ func TestStrategyWebhook_Listen(t *testing.T) {
 	expMessages := []string{"message 1", "message 2"}
 	require.Equal(t, expMessages, messages)
 	require.Equal(t, 2, len(errs))
-	for i := range errs {
-		_, ok := errs[i].(*json.SyntaxError)
-		require.True(t, ok)
-	}
 }
 
 func TestStrategyWebhook_Stop(t *testing.T) {
