@@ -37,6 +37,29 @@ func (_m *Bot) GetAccountInfo(ctx context.Context) (*models.AccountInfoResponse,
 	return r0, r1
 }
 
+// GetOnline provides a mock function with given fields: ctx, req
+func (_m *Bot) GetOnline(ctx context.Context, req models.UserIDsRequest) (*models.GetOnlineResponse, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 *models.GetOnlineResponse
+	if rf, ok := ret.Get(0).(func(context.Context, models.UserIDsRequest) *models.GetOnlineResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.GetOnlineResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, models.UserIDsRequest) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetUserDetails provides a mock function with given fields: ctx, req
 func (_m *Bot) GetUserDetails(ctx context.Context, req models.UserIDRequest) (*models.UserDetailsResponse, error) {
 	ret := _m.Called(ctx, req)

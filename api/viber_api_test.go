@@ -161,6 +161,10 @@ func TestViberAPI_Integration(t *testing.T) {
 			name:        "getUserDetails",
 			testHandler: getUserDetails{},
 		},
+		{
+			name:        "getOnline",
+			testHandler: getOnline{},
+		},
 	}
 	for i := range testCases {
 		tc := &testCases[i]
